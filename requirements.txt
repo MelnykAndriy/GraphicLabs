@@ -1,0 +1,2 @@
+pycurve (1.0.2)
+pySFML (2.2.0)
