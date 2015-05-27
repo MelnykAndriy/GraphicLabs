@@ -138,6 +138,31 @@ class BresenhamCircle(CompositeDrawable, PixelScalable):
         return self._pixels
 
 
+class DDALine(CompositeDrawable, PixelScalable):
+
+    def __init__(self, a, b, color=sf.Color.BLACK, **kwargs):
+        super(DDALine, self).__init__()
+        Scalable.__init__(self, **kwargs)
+        self._pixels = []
+
+        x_iter = a.getX()
+        y_iter = a.getY()
+
+        dx = float((b.getX() - a.getX()))/max(abs(a.getX() - b.getX()), abs(b.getY() - a.getY()))
+        dy = float((b.getY() - a.getY()))/max(abs(a.getX() - b.getX()), abs(b.getY() - a.getY()))
+
+        for _ in xrange(max(abs(a.getX() - b.getX()), abs(b.getY() - a.getY()))):
+            self._pixels.append(self._make_pixel((int(x_iter), int(y_iter)), color))
+            if a.getX() != b.getX():
+                x_iter += dx
+
+            if a.getY() != b.getY():
+                y_iter += dy
+
+    def _get_components(self):
+        return self._pixels
+
+
 class WuLine(CompositeDrawable, PixelScalable):
 
     def __init__(self, a, b, color=sf.Color.BLACK, **kwargs):
@@ -251,25 +276,25 @@ class DrawApp(object):
 
 if __name__ == '__main__':
     app = DrawApp([
-        WuLine(IntPoint(50, 350), IntPoint(100, 100), color=sf.Color.GREEN),
-        WuLine(IntPoint(150, 350), IntPoint(100, 100), color=sf.Color.GREEN),
-        WuLine(IntPoint(65, 275), IntPoint(135, 275), color=sf.Color.GREEN),
+        # WuLine(IntPoint(50, 350), IntPoint(100, 100), color=sf.Color.GREEN),
+        # WuLine(IntPoint(150, 350), IntPoint(100, 100), color=sf.Color.GREEN),
+        # WuLine(IntPoint(65, 275), IntPoint(135, 275), color=sf.Color.GREEN),
+        #
+        # BresenhamLine(IntPoint(170, 350), IntPoint(220, 100), color=sf.Color.MAGENTA),
+        # BresenhamLine(IntPoint(270, 350), IntPoint(220, 100), color=sf.Color.MAGENTA),
+        # BresenhamLine(IntPoint(185, 275), IntPoint(25, 275), color=sf.Color.MAGENTA),
+        #
+        # WuLine(IntPoint(290, 350), IntPoint(340, 100), color=sf.Color.RED),
+        # WuLine(IntPoint(340, 100), IntPoint(360, 200), color=sf.Color.RED),
+        # WuLine(IntPoint(360, 200), IntPoint(380, 100), color=sf.Color.RED),
+        # WuLine(IntPoint(380, 100), IntPoint(430, 350), color=sf.Color.RED),
 
-        BresenhamLine(IntPoint(170, 350), IntPoint(220, 100), color=sf.Color.MAGENTA),
-        BresenhamLine(IntPoint(270, 350), IntPoint(220, 100), color=sf.Color.MAGENTA),
-        BresenhamLine(IntPoint(185, 275), IntPoint(255, 275), color=sf.Color.MAGENTA),
-
-        WuLine(IntPoint(290, 350), IntPoint(340, 100), color=sf.Color.RED),
-        WuLine(IntPoint(340, 100), IntPoint(360, 200), color=sf.Color.RED),
-        WuLine(IntPoint(360, 200), IntPoint(380, 100), color=sf.Color.RED),
-        WuLine(IntPoint(380, 100), IntPoint(430, 350), color=sf.Color.RED),
-
-        # WuLine(IntPoint(20, 60), IntPoint(60, 10), scale=8),
-        # BresenhamLine(IntPoint(40, 60), IntPoint(80, 10), scale=8),
+        DDALine(IntPoint(20, 60), IntPoint(60, 10), scale=8),
+        BresenhamLine(IntPoint(40, 60), IntPoint(80, 10), scale=8),
         # Ellipse(IntPoint(50, 50), 40, 20, scale=8),
         # BresenhamCircle(IntPoint(50, 50), 20, scale=8),
-        # BresenhamCircle(IntPoint(50, 50), 40, scale=8)
-        # WuEllipse(IntPoint(150, 50), 40, 40, scale=1)
+        # BresenhamCircle(IntPoint(50, 50), 40, scale=8),
+        # WuEllipse(IntPoint(150, 50), 40, 40, scale=1),
         # BresenhamCircle(Point(400, 400), radius=100, scale=1),
         # Ellipse(Point(400, 400), 100, 300, scale=1),
         # BresenhamCircle(IntPoint(400, 400), radius=300, scale=1),
